@@ -1,0 +1,28 @@
+name: Todo-Infra-Framework
+
+on: workflow_dispatch
+ 
+  # pull_request:
+  #   # Sequence of patterns matched against refs/heads
+  #   branches:
+  #     - master
+      
+  # push:
+  #   # Sequence of patterns matched against refs/heads
+  #   branches:
+  #     - master
+
+permissions:
+  id-token: write       # Required for Azure OIDC login
+  contents: read        # Required to download Terraform code
+
+jobs:
+  terraform-init-plan:
+    runs-on: todo
+    name: terraform-init-plan
+    steps:
+    
+  my_second_job:
+    name: My second job
+
+
