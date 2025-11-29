@@ -55,7 +55,7 @@ jobs:
       working-directory: Enviornment/Dev  
         
   terraform-apply:    
-    runs-on: self-hosted
+    runs-on: todo
     if: github.ref == 'refs/heads/master'
     needs: terraform-init-plan
     steps:
