@@ -1,4 +1,4 @@
-name: Todo-Infra-Framework
+name: "Todo-Infra-Framework"
 
 on: workflow_dispatch
  
@@ -21,8 +21,69 @@ jobs:
     runs-on: todo
     name: terraform-init-plan
     steps:
+    - name: Checkout
+      uses: actions/checkout@v6.0.0
+
+    - name: Azure Login
+      uses: Azure/login@v2.3.0
+      with:
+        client-id: 514d9938-8aa7-4041-996e-260403461145
+        tenant-id: e36e2232-cac4-497a-9243-862b9b46221b
+        subscription-id: 06f4c176-e41e-424a-bfc2-cb4b3a4e5fe5
+        
+      
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: true
+      working-directory: Enviornment/Dev
+        
+    - name: Terraform Init
+      id: init
+      run: terraform init -input=false  
+      working-directory: Enviornment/Dev
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+      working-directory: Enviornment/Dev        
+      
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan -no-color -input=false
+      continue-on-error: true
+      working-directory: Enviornment/Dev  
+        
+  terraform-apply:    
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/master'
+    needs: terraform-init-plan
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6.0.0
+
+    - name: Azure Login
+      uses: Azure/login@v2.3.0
+      with:
+        client-id: 514d9938-8aa7-4041-996e-260403461145
+        tenant-id: e36e2232-cac4-497a-9243-862b9b46221b
+        subscription-id: 06f4c176-e41e-424a-bfc2-cb4b3a4e5fe5  
+          
+    - name: Terraform Init
+      id: init
+      run: terraform init -input=false  
+      working-directory: Enviornment/Dev
+
+    - name: Terraform Apply
+      id: apply
+      run: terraform apply --auto-approve
+      continue-on-error: true
+      working-directory: Enviornment/Dev              
+         
+      
+
+
     
-  my_second_job:
-    name: My second job
+
 
 
